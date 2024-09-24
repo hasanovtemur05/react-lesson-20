@@ -36,7 +36,7 @@ const SignInForm = () => {
      <div className="w-[70%] flex flex-col justify-center items-center md:w-[50%]">
      <div  className="w-full md:w-[60%] " >
         <ToastContainer />
-        <h1 style={{ textAlign: "center", fontSize:"30px", fontWeight: "bold", padding:"10px 0px"}}>Sign-In</h1>
+        <h1 style={{ textAlign: "center", fontSize:"30px", fontWeight: "bold", padding:"10px 10px"}}>Sign-In</h1>
         <Form
           form={form}
           initialValues={initialValues}
@@ -51,7 +51,7 @@ const SignInForm = () => {
               { required: true, message: "Please input your phone number!" },
             ]}
           >
-            <Input placeholder="Enter your phone number" style={{padding:"7px", fontSize:"16px"}} />
+            <Input placeholder="Enter your phone number" style={{padding:"7px 15px", fontSize:"16px"}} />
           </Form.Item>
 
           <Form.Item
@@ -59,7 +59,7 @@ const SignInForm = () => {
             label={<span style={{ fontSize: "14px", }}>Password</span>}
             rules={[{ required: true, message: "Please input your password!" }]}
           >
-            <Input.Password placeholder="Enter your password" style={{padding:"7px", fontSize:"16px"}} />
+            <Input.Password placeholder="Enter your password" style={{padding:"7px 15px", fontSize:"16px"}} />
           </Form.Item>
 
           <Form.Item>

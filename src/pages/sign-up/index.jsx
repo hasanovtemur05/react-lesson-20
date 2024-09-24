@@ -1,15 +1,21 @@
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import { Formik, Field, Form, ErrorMessage } from "formik";
-import { useState } from "react";
+import React from "react";
+import { Formik, Field } from "formik";
 import { useNavigate } from "react-router-dom";
-import Notification from "./../../utils/notification";
-import { ToastContainer } from "react-toastify";
-import { signUpvAalidationSchema } from "./../../utils/validation";
+import { Form, Input, Button, message } from "antd";
+import * as Yup from "yup";
 import axios from "axios";
 
+const signUpValidationSchema = Yup.object().shape({
+  first_name: Yup.string().required("Please input your first name!"),
+  last_name: Yup.string().required("Please input your last name!"),
+  phone_number: Yup.string().required("Please input your phone number!"),
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Please input your email!"),
+  password: Yup.string().required("Please input your password!"),
+});
+
 const Index = () => {
-  const [form, setForm] = useState({});
   const navigate = useNavigate();
 
   const initialValues = {
@@ -22,116 +28,87 @@ const Index = () => {
 
   const handleSubmit = async (values) => {
     try {
-      const response = await axios.post("https://texnoark.ilyosbekdev.uz/auth/admin/sign-up", values)
+      const response = await axios.post(
+        "https://texnoark.ilyosbekdev.uz/auth/admin/sign-up",
+        values
+      );
       if (response.status === 201) {
-        navigate("/")
+        message.success("Sign-up successful!");
+        navigate("/");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      message.error("Sign-up failed. Please try again.");
     }
   };
 
   return (
-    <div className="container">
-      <ToastContainer />
-      <div className="row mt-5">
-        <div className="col-md-6 offset-3">
-          <div className="card">
-            <div className="card-header">
-              <h1 className="text-center">Sign-Up</h1>
-            </div>
-            <div className="card-body">
-              <Formik
-                initialValues={initialValues}
-                onSubmit={handleSubmit}
-                validationSchema={signUpvAalidationSchema}
-              >
-                <Form id="form">
-                  <Field
-                    name="first_name"
-                    as={TextField}
-                    fullWidth
-                    label="first name"
-                    type="text"
-                    helperText={
-                      <ErrorMessage
-                        name="first_name"
-                        component="p"
-                        className="text-red-600 text-[15px]"
-                      />
-                    }
-                  />
+    <div style={{ margin: "auto", marginTop: "50px" }} className="max-w-64 lg:max-w-[450px]">
+      <Formik
+        initialValues={initialValues}
+        validationSchema={signUpValidationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ errors, touched, handleSubmit, setFieldValue }) => (
+          <Form layout="vertical" onFinish={handleSubmit}>
+            <Form.Item
+              label="First Name"
+              validateStatus={errors.first_name && touched.first_name ? "error" : ""}
+              help={errors.first_name && touched.first_name ? errors.first_name : ""}
+            >
+              <Field name="first_name">
+                {({ field }) => <Input {...field} placeholder="First Name" />}
+              </Field>
+            </Form.Item>
 
-                  <Field
-                    name="last_name"
-                    as={TextField}
-                    fullWidth
-                    label="last name"
-                    type="text"
-                    helperText={
-                      <ErrorMessage
-                        name="last_name"
-                        component="p"
-                        className="text-red-600 text-[15px]"
-                      />
-                    }
-                  />
+            <Form.Item
+              label="Last Name"
+              validateStatus={errors.last_name && touched.last_name ? "error" : ""}
+              help={errors.last_name && touched.last_name ? errors.last_name : ""}
+            >
+              <Field name="last_name">
+                {({ field }) => <Input {...field} placeholder="Last Name" />}
+              </Field>
+            </Form.Item>
 
-                  <Field
-                    name="phone_number"
-                    as={TextField}
-                    fullWidth
-                    label="phone number"
-                    type="text"
-                    helperText={
-                      <ErrorMessage
-                        name="phone_number"
-                        component="p"
-                        className="text-red-600 text-[15px]"
-                      />
-                    }
-                  />
+            <Form.Item
+              label="Phone Number"
+              validateStatus={errors.phone_number && touched.phone_number ? "error" : ""}
+              help={errors.phone_number && touched.phone_number ? errors.phone_number : ""}
+            >
+              <Field name="phone_number">
+                {({ field }) => <Input {...field} placeholder="Phone Number" />}
+              </Field>
+            </Form.Item>
 
-                  <Field
-                    name="email"
-                    as={TextField}
-                    fullWidth
-                    label="email"
-                    type="email"
-                    helperText={
-                      <ErrorMessage
-                        name="email"
-                        component="p"
-                        className="text-red-600 text-[15px]"
-                      />
-                    }
-                  />
+            <Form.Item
+              label="Email"
+              validateStatus={errors.email && touched.email ? "error" : ""}
+              help={errors.email && touched.email ? errors.email : ""}
+            >
+              <Field name="email">
+                {({ field }) => <Input {...field} placeholder="Email" />}
+              </Field>
+            </Form.Item>
 
-                  <Field
-                    name="password"
-                    as={TextField}
-                    fullWidth
-                    label="password"
-                    type="password"
-                    helperText={
-                      <ErrorMessage
-                        name="password"
-                        component="p"
-                        className="text-red-600 text-[15px]"
-                      />
-                    }
-                  />
-                </Form>
-              </Formik>
-            </div>
-            <div className="card-footer">
-              <Button form="form" type="submit" variant="contained">
-                save
+            <Form.Item
+              label="Password"
+              validateStatus={errors.password && touched.password ? "error" : ""}
+              help={errors.password && touched.password ? errors.password : ""}
+            >
+              <Field name="password">
+                {({ field }) => <Input.Password {...field} placeholder="Password" />}
+              </Field>
+            </Form.Item>
+
+            <Form.Item>
+              <Button type="primary" htmlType="submit" block>
+                Save
               </Button>
-            </div>
-          </div>
-        </div>
-      </div>
+            </Form.Item>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };

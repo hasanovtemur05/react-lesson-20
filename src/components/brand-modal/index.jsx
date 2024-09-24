@@ -6,6 +6,8 @@ import Button from "@mui/material/Button";
 import { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import Select from "@mui/material/Select"; // Import Select from MUI
+import MenuItem from "@mui/material/MenuItem"; // Import MenuItem from MUI
 
 const brandValidationSchema = Yup.object().shape({
   name: Yup.string().required("Brand Name is required"),
@@ -26,7 +28,7 @@ const style = {
   p: 4,
 };
 
-export default function BrandModal({ open, handleClose, handleSubmit, editingBrand }) {
+export default function BrandModal({ open, handleClose, handleSubmit, editingBrand, categories }) {
   const [initialValues, setInitialValues] = useState({
     name: "",
     description: "",
@@ -49,7 +51,13 @@ export default function BrandModal({ open, handleClose, handleSubmit, editingBra
 
   const onSubmit = async (values, { setSubmitting }) => {
     try {
-      await handleSubmit(values);
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("description", values.description);
+      formData.append("category_id", values.category_id);
+      formData.append("file", values.file);
+
+      await handleSubmit(formData);
       handleClose();
     } catch (error) {
       console.log("Error in submission:", error);
@@ -57,8 +65,6 @@ export default function BrandModal({ open, handleClose, handleSubmit, editingBra
       setSubmitting(false);
     }
   };
-
-
 
   return (
     <Modal open={open} onClose={handleClose}>
@@ -87,18 +93,33 @@ export default function BrandModal({ open, handleClose, handleSubmit, editingBra
                 as={TextField}
                 fullWidth
                 label="Description"
+                multiline
+                rows={4}
                 helperText={<ErrorMessage name="description" component="div" className="text-red-600 text-[15px]" />}
                 sx={{ marginY: "15px" }}
               />
-              <Field
-                name="category_id"
-                as={TextField}
-                fullWidth
-                type="number"
-                label="Brand ID"
-                helperText={<ErrorMessage name="category_id" component="div" className="text-red-600 text-[15px]" />}
-                sx={{ marginY: "15px" }}
-              />
+              <Field name="category_id">
+                {({ field, form }) => (
+                  <Select
+                    {...field}
+                    fullWidth
+                    displayEmpty
+                    inputProps={{ "aria-label": "Without label" }}
+                    onChange={(event) => setFieldValue("category_id", event.target.value)}
+                    sx={{ marginY: "15px" }}
+                  >
+                    <MenuItem value="" disabled>
+                      Select Category
+                    </MenuItem>
+                    {categories.map((category) => (
+                      <MenuItem key={category.id} value={category.id}>
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+              </Field>
+              <ErrorMessage name="category_id" component="div" className="text-red-600 text-[15px]" />
               <input
                 name="file"
                 type="file"
@@ -109,7 +130,7 @@ export default function BrandModal({ open, handleClose, handleSubmit, editingBra
               />
               <ErrorMessage name="file" component="div" className="text-red-600 text-[15px]" />
               <Button variant="contained" color="success" type="submit" disabled={isSubmitting} fullWidth>
-                {editingBrand?.id ? "Update" : "Save"}
+                {editingBrand?.id ? "Update" : "Create"}
               </Button>
             </Form>
           )}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Outlet, useLocation, NavLink } from "react-router-dom";
 import { admin } from "../../router/routs";
+import logo from "../../assets/images/logo.png"
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -48,16 +49,14 @@ const Index = () => {
   );
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: "100vh" }} >
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div
-          className="logo"
-          style={{
-            height: 32,
-            margin: 16,
-            background: "rgba(235, 15, 155, 0.2)",
-          }}
-        />
+
+        <div className="w-[80%]  h-auto m-[10px]" >
+          <img src={logo} alt="logo" />
+          </div>
+
+
         <Menu
           theme="dark"
           mode="inline"
@@ -77,10 +76,11 @@ const Index = () => {
       <Layout>
         <Header
           style={{
-            padding: 0,
+            padding:"0px 20px",
             background: colorBgContainer,
             display: "flex",
             justifyContent: "space-between",
+            alignItems:"center"
           }}
         >
           <Button
@@ -102,7 +102,7 @@ const Index = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          <Outlet /> {/* Nested routing for content */}
+          <Outlet />
         </Content>
       </Layout>
     </Layout>

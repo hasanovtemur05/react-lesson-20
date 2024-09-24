@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
-import { brand } from "@service"; 
+import { brand, category } from "@service"; 
 import { BrandModal, BrandTable } from "@components";
-
 
 const Index = () => {
   const [open, setOpen] = useState(false);
   const [brands, setBrands] = useState([]);
   const [editingBrand, setEditingBrand] = useState(null);
+  const [categories, setCategories] = useState([]);
 
   const handleClose = () => {
     setOpen(false);
@@ -19,12 +19,22 @@ const Index = () => {
       const res = await brand.get();
       setBrands(res?.data?.data?.brands);
     } catch (error) {
-      console.log("Error");
+      console.log("Error fetching brands");
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const res = await category.get();
+      setCategories(res?.data?.data?.categories); // Assumed response structure
+    } catch (error) {
+      console.log("Error fetching categories");
     }
   };
 
   useEffect(() => {
     fetchBrands();
+    fetchCategories();
   }, []);
 
   const handleSubmit = async (brandData) => {
@@ -67,6 +77,7 @@ const Index = () => {
         handleClose={handleClose} 
         handleSubmit={handleSubmit} 
         editingBrand={editingBrand} 
+        categories={categories} // Pass categories to BrandModal
       />
       <Button variant="contained" color="primary" onClick={handleCreate}>Create Brand</Button>
       <BrandTable data={brands} onEdit={handleEdit} onDelete={handleDelete} />
