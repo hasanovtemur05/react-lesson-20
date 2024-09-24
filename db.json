@@ -1,0 +1,35 @@
+{
+  "student": [
+    {
+      "name": "temur",
+      "age": "12",
+      "phone": "+998938051615",
+      "course": "Standart Backend",
+      "teacher": "Akmal",
+      "group": "Bootcamp frontend react js N11",
+      "id": "94e3"
+    }
+  ],
+  "teacher": [
+    {
+      "id": "12sdcs",
+      "name": "Kimdir",
+      "course": "Bootcamp Frontend"
+    }
+  ],
+  "group": [
+    {
+      "id": "1121222",
+      "name": "Bootcamp frontend react js N11",
+      "course": "Backend"
+    }
+  ],
+  "course": [
+    {
+      "id": "f95e",
+      "name": "Standart Backend",
+      "duration": "8-oy",
+      "price": "130$"
+    }
+  ]
+}
